@@ -35,6 +35,7 @@ typedef struct {
     char nome[40];
 } aluno;
 
+//metodos principais
 void cadastrarAluno(Lista *lista);
 void exibirElementos(Lista *lista);
 void consultar(Lista *lista);
@@ -43,7 +44,7 @@ void alterar(Lista *lista);
 void excluir(Lista *lista);
 void excluirTudo(Lista *lista);
 
-//meotedos auxiliares
+//metodos auxiliares
 const char *getNomeOcorrencia(enum desc_ocorrencia ocorrencia);
 
 
@@ -116,8 +117,6 @@ void cadastrarAluno(Lista *lista) {
         printf("Ocorrência (1- Esqueceu/ 2 -Perdeu/ 3 -NaoPossui 4-Outros): ");
         scanf("%d", &lista->A[lista->nroElem].ocorrencia);
 
-        // Outras informações podem ser adicionadas conforme necessário
-
         lista->nroElem++;
         printf("Aluno cadastrado com sucesso!\n");
     } else {
@@ -134,7 +133,6 @@ void exibirElementos(Lista *lista) {
     for ( i = 0; i < lista->nroElem; i++) {
         printf("Nome do aluno: %s\n", lista->A[i].nome);
         printf("Ocorrencia: %s\n", getNomeOcorrencia(lista->A[i].ocorrencia));
-        // Exibir outras informações conforme necessário
         printf("\n");
     }
 }
@@ -150,8 +148,7 @@ void consultar(Lista *lista) {
         if (strcmp(nomeConsulta, lista->A[i].nome) == 0) {
             printf("\n\n ---------- Informações do Aluno -----------------\n\n\n");
             printf("Nome do aluno: %s\n", lista->A[i].nome);
-            printf("Ocorrência: %d\n", lista->A[i].ocorrencia);
-            // Exibir outras informações conforme necessário
+            printf("Ocorrência: %s\n", lista->A[i].ocorrencia);
             return;
         }
     }
@@ -188,8 +185,6 @@ void alterar(Lista *lista) {
             printf("Nova ocorrência (Esqueceu/Perdeu/NaoPossui/Outros): ");
             scanf("%d", &lista->A[i].ocorrencia);
 
-            // Outras informações podem ser editadas conforme necessário
-
             printf("Informações do aluno editadas com sucesso!\n");
             return;
         }
@@ -211,7 +206,6 @@ void excluir(Lista *lista) {
             for ( j= i; j < lista->nroElem - 1; j++) {
                 strcpy(lista->A[j].nome, lista->A[j + 1].nome);
                 lista->A[j].ocorrencia = lista->A[j + 1].ocorrencia;
-                // Copie outras informações conforme necessário
             }
 
             lista->nroElem--;
