@@ -41,6 +41,7 @@ void consultar(Lista *lista);
 int verificarTamanho(Lista *lista);
 void alterar(Lista *lista);
 void excluir(Lista *lista);
+void excluirTudo(Lista *lista);
 
 //meotedos auxiliares
 const char *getNomeOcorrencia(enum desc_ocorrencia ocorrencia);
@@ -59,7 +60,8 @@ int main() {
         printf("4. Verificar Tamanho\n");
         printf("5. Alterar Acesso do aluno\n");
         printf("6. Excluir acesso do aluno\n");
-        printf("7. Sair\n");
+        printf("7. Excluir todos os registros\n");
+        printf("8. Sair\n");
 
         printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
@@ -88,8 +90,11 @@ int main() {
                 
             case 6:
                 excluir(&lista);
-                break;    
+                break;
             case 7:
+                excluirTudo(&lista);
+                break;        
+            case 8:
                 printf("Saindo do programa. Ate logo!\n");
                 break;
             default:
@@ -128,7 +133,7 @@ void exibirElementos(Lista *lista) {
     }                     
     for ( i = 0; i < lista->nroElem; i++) {
         printf("Nome do aluno: %s\n", lista->A[i].nome);
-        printf("Ocorrencia: %d\n", getNomeOcorrencia(lista->A[i].ocorrencia));
+        printf("Ocorrencia: %s\n", getNomeOcorrencia(lista->A[i].ocorrencia));
         // Exibir outras informações conforme necessário
         printf("\n");
     }
@@ -165,10 +170,11 @@ int verificarTamanho(Lista *lista) {
 
 void alterar(Lista *lista) {
     char nomeConsulta[40];
+    int i; 
     printf("Digite o nome do aluno para editar: ");
     fflush(stdin);
     fgets(nomeConsulta, 40, stdin);
-    int i; 
+    
     for (i= 0; i < lista->nroElem; i++) {
         if (strcmp(nomeConsulta, lista->A[i].nome) == 0) {
             printf("\n\n ---------- Editar Informações do Aluno -----------------\n\n\n");
@@ -215,6 +221,11 @@ void excluir(Lista *lista) {
     }
 
     printf("Aluno nao encontrado.\n");
+}
+
+void excluirTudo(Lista *lista) {
+     lista->nroElem = 0;
+     printf("----------- Todos os alunos foram excluidos do sistemas --------------\n");
 }
 
 const char *getNomeOcorrencia(enum desc_ocorrencia ocorrencia) {
