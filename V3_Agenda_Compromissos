@@ -1,0 +1,270 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MAX_DATA 5
+#define MAX 20
+typedef int TIPOCHAVE;
+
+typedef struct
+{
+  int dia;
+  int mes;
+  int ano;
+} DataRef;
+
+typedef struct
+{
+  TIPOCHAVE chave;                // Controle ID
+  DataRef dataCompromisso;        // Data Compromisso
+  char descricaoCompromisso[300]; // Descrição
+} Agenda;
+
+typedef struct
+{
+  Agenda A[MAX];
+  int topo;
+} Pilha;
+
+typedef struct
+{
+  Agenda A[MAX];
+  int nroElem;
+} Lista;
+
+void novoCompromisso(Pilha *pilha);
+int passouData(DataRef *dataRef);
+void exibirElementos(Lista *lista);
+void consultar(Lista *lista);
+void alterar(Lista *lista);
+void excluir(Lista *lista);
+void excluirTudo(Lista *lista);
+
+int main()
+{
+  DataRef dataRef[MAX_DATA];
+  char dataCompromisso[5];
+  char consulta[5];
+
+  int opcao;
+  Lista lista;
+  lista.nroElem = 0;
+  Pilha pilha;
+  pilha.topo = 0;
+
+  do
+  {
+    printf("\n\n ---------- Menu Principal -----------------\n");
+    printf("1. Novo Compromisso\n");
+    printf("2. Exibir Agenda\n");
+    printf("3. Consultar Agenda\n");
+    printf("4. Verificar Agenda\n");
+    printf("5. Alterar Compromisso\n");
+    printf("6. Excluir Compromisso\n");
+    printf("7. Excluir todos os registros\n");
+    printf("8. Salvar resgistros\n");
+    printf("9. Sair\n");
+
+    printf("Escolha uma opcao: ");
+    scanf("%d", &opcao);
+
+    switch (opcao)
+    {
+    case 1:
+      novoCompromisso(&pilha);
+      break;
+    case 2:
+      exibirElementos(&lista);
+      break;
+    case 3:
+      consultar(&lista);
+      break;
+    case 4:
+      if (lista.nroElem == 0)
+      {
+        printf("Nao existe aluno no sistema");
+      }
+      else
+      {
+        // verificarTamanho(&lista); // Não foi definida no código fornecido
+      }
+      break;
+    case 5:
+      alterar(&lista);
+      break;
+    case 6:
+      excluir(&lista);
+      break;
+    case 7:
+      excluirTudo(&lista);
+      break;
+    case 8:
+      // salvarDados(&lista, "dados.txt"); // Não foi definida no código fornecido
+      break;
+    case 9:
+      printf("Saindo do programa. Ate logo!\n");
+      break;
+    default:
+      printf("Opcao invalida. Tente novamente.\n");
+    }
+
+  } while (opcao != 9);
+
+  return 0;
+}
+
+void novoCompromisso(Pilha *pilha)
+{
+  DataRef tempData;
+  if (pilha->topo < MAX)
+  {
+    printf("\n\n ---------- Novo Compromisso -----------------\n\n\n");
+    printf("Digite a data do Compromisso no formato(dd mm yyyy)...........:");
+    scanf("%d %d %d", &tempData.dia, &tempData.mes, &tempData.ano);
+    if (passouData(&tempData))
+    {
+      printf("Data solicitada ja passou.\n");
+    }
+    else
+    {
+      scanf("%d", &pilha->A[pilha->topo].dataCompromisso);
+      printf("Descreva o tipo do Compromisso: ");
+      scanf("%s", pilha->A[pilha->topo].descricaoCompromisso);
+      pilha->topo++;
+      printf("Compromisso cadastrado com sucesso!\n");
+    }
+  }
+  else
+  {
+    printf("A pilha esta cheia. Nao eh possivel cadastrar mais compromissos.\n");
+  }
+}
+
+int passouData(DataRef *dataRef)
+{
+  time_t dataAtual;
+  struct tm *info;
+  time(&dataAtual);
+  info = localtime(&dataAtual);
+
+  printf("Data atual: %02d/%02d/%04d\n",
+         info->tm_mday, info->tm_mon + 1, info->tm_year + 1900);
+
+  if (dataRef->ano < info->tm_year + 1900)
+  {
+    return 1;
+  }
+  else if (dataRef->ano == info->tm_year + 1900)
+  {
+    if (dataRef->mes < info->tm_mon + 1)
+    {
+      return 1;
+    }
+    else if (dataRef->mes == info->tm_mon + 1)
+    {
+      if (dataRef->dia < info->tm_mday)
+      {
+        return 1;
+      }
+    }
+  }
+
+  return 0;
+}
+
+void exibirElementos(Lista *lista)
+{
+  printf("\n\n ---------- Lista de Compromissos -----------------\n\n\n");
+  int i;
+  if (lista->nroElem == 0)
+  {
+    printf("Nao existe Agenda.");
+  }
+  for (i = 0; i < lista->nroElem; i++)
+  {
+    printf(" A data agendada eh: %d\n", lista->A[i].dataCompromisso);
+    printf("Descricao: %s\n", lista->A[i].descricaoCompromisso);
+    printf("\n");
+  }
+}
+
+void consultar(Lista *lista)
+{
+  int i;
+  printf("Digite a data Agendada no formato(dd mm yyyy): ");
+  fflush(stdin);
+  fgets(dataCompromisso, 5, stdin);
+
+  for (i = 0; i < lista->nroElem; i++)
+  {
+    if (strcmp(dataCompromisso, lista->A[i].dataCompromisso) == 0)
+    {
+      printf("\n\n ---------- Informacoes do Agenda -----------------\n\n\n");
+      printf("Data Agendada: %d\n", lista->A[i].dataCompromisso);
+      printf("Descricao: %s\n", lista->A[i].descricaoCompromisso);
+      return;
+    }
+  }
+
+  printf("Data nao Agendada.\n");
+}
+
+void alterar(Lista *lista)
+{
+  int i;
+  printf("Digite a Data a ser alterada no formato(dd mm yyyy): ");
+  fflush(stdin);
+  fgets(consulta, 5, stdin);
+
+  for (i = 0; i < lista->nroElem; i++)
+  {
+    if (strcmp(consulta, lista->A[i].dataCompromisso) == 0)
+    {
+      printf("\n\n ---------- Editar Informacoes da Agenda -----------------\n\n\n");
+      printf("Data Anterior: %d\n", lista->A[i].dataCompromisso);
+
+      printf("Nova Data: ");
+      fflush(stdin);
+      scanf("%d", &lista->A[i].dataCompromisso);
+
+      printf("Descricao do Agendamento: %s\n", lista->A[i].descricaoCompromisso);
+      scanf("%s", lista->A[i].descricaoCompromisso);
+
+      printf("Informacoes alteradas com sucesso!\n");
+      return;
+    }
+  }
+
+  printf("Sem agendamento.\n");
+}
+
+void excluir(Lista *lista)
+{
+  printf("Digite a data para excluir no formato(dd mm yyyy): ");
+  fflush(stdin);
+  fgets(consulta, 5, stdin);
+  int i;
+  for (i = 0; i < lista->nroElem; i++)
+  {
+    if (strcmp(consulta, lista->A[i].dataCompromisso) == 0)
+    {
+      int j;
+      for (j = i; j < lista->nroElem - 1; j++)
+      {
+        lista->A[j] = lista->A[j + 1];
+      }
+
+      lista->nroElem--;
+      printf("Agendamento excluido!\n");
+      return;
+    }
+  }
+
+  printf("Agendamento nao encontrado.\n");
+}
+
+void excluirTudo(Lista *lista)
+{
+  lista->nroElem = 0;
+  printf("----------- Todos os agendamentos foram excluidos do sistema --------------\n");
+}
