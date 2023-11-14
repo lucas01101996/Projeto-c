@@ -12,8 +12,6 @@ enum desc_ocorrencia
     Perdeu = 2,
     NaoPossui = 3,
     Outros = 4,
-    MalUso = 5,
-    Desgastado = 6
 };
 
 typedef struct
@@ -147,7 +145,7 @@ void cadastrarAluno(Lista *lista)
         fflush(stdin);
         fgets(lista->A[lista->nroElem].nome, 40, stdin);
 
-        printf("Ocorr�ncia (1- Esqueceu/ 2 -Perdeu/ 3 -NaoPossui 4-Outros / 5-MalUso, 6-Desgastado): ");
+        printf("Ocorr�ncia (1- Esqueceu/ 2 -Perdeu/ 3 -NaoPossui 4-Outros): ");
         scanf("%d", &lista->A[lista->nroElem].ocorrencia);
 
         lista->nroElem++;
@@ -291,12 +289,6 @@ const char *getNomeOcorrencia(enum desc_ocorrencia ocorrencia)
     case 4:
     Outros:
         return "Outros";
-    case 5:
-    MalUso:
-        return "MalUso";
-    case 6:
-    Desgastado:
-        return "Desgastado";
     default:
         return "Desconhecido";
     }
